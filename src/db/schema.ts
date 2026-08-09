@@ -53,18 +53,18 @@ export const userRelations = relations(users, ({ many }) => ({
 // A product can only have one user
 // A product can have many comments
 export const productRelations = relations(products, ({ one, many }) => ({
-  users: one(users, { fields: [products.userId], references: [users.id] }),
+  user: one(users, { fields: [products.userId], references: [users.id] }),
   comments: many(comments),
 }));
 
 // A comment can only have one product
 // A comment can only have one user
 export const commentsRelations = relations(comments, ({ one }) => ({
-  users: one(users, {
+  user: one(users, {
     fields: [comments.userId],
     references: [users.id],
   }),
-  products: one(products, {
+  product: one(products, {
     fields: [comments.productId],
     references: [products.id],
   }),
