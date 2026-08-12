@@ -5,14 +5,13 @@ import { clerkMiddleware } from "@clerk/express";
 import userRoutes from "./routes/userRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
-import expressAsyncHandler from "express-async-handler";
+import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 
 // initialize express app
 const app = express();
 
 // add middlewares
 app.use(cors({ origin: ENV.FRONTEND_URL }));
-app.use(expressAsyncHandler);
 app.use(clerkMiddleware); // attaches the auth obj to the request
 app.use(express.json()); // parse the json body
 app.use(express.urlencoded({ extended: true })); // parse form data
@@ -23,6 +22,10 @@ const baseApiUrl = "/api/v1";
 app.use(baseApiUrl + "/users", userRoutes);
 app.use(baseApiUrl + "/products", productRoutes);
 app.use(baseApiUrl + "/comments", commentRoutes);
+
+// error and not found (custom middlewares)
+app.use(notFound);
+app.use(errorHandler);
 
 // server
 app.listen(ENV.PORT, () =>
