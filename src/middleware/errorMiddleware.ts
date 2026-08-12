@@ -1,28 +1,29 @@
 import type { Request, Response, NextFunction } from "express";
 import { ENV } from "../config/env.js";
-export const errorMiddleware = (
-  error: Error,
+const notFound = (req: Request, res: Response, next: NextFunction) => {
+  const error = new Error(`Not Found - ${req.originalUrl}`);
+  res.status(404);
+  next(error);
+};
+
+const errorHandler = (
+  err: Error,
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  if (ENV.NODE_ENV == "development") {
-    res.status(500).json({
-      error:
-        "Error happened. Error: " +
-        error.message +
-        " error stack: " +
-        error.stack,
-    });
-  } else {
-    console.error(
-      "Error happened. Error: " +
-        error.message +
-        " error stack: " +
-        error.stack,
-    );
-    res.status(500).json({
-      error: "Something went wrong. Please check the longs ",
-    });
+  let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  let message = err.message;
+
+  if (err.name === "CastError") {
+    statusCode = 404;
+    message = "Resource not found";
   }
+
+  res.status(statusCode).json({
+    message,
+    stack: ENV.NODE_ENV === "production" ? null : err.stack,
+  });
 };
+
+export { errorHandler, notFound };
