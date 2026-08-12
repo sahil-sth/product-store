@@ -2,18 +2,27 @@ import express from "express";
 import { ENV } from "./config/env.js";
 import cors from "cors";
 import { clerkMiddleware } from "@clerk/express";
+import userRoutes from "./routes/userRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
+import commentRoutes from "./routes/commentRoutes.js";
+import expressAsyncHandler from "express-async-handler";
 
 // initialize express app
 const app = express();
 
 // add middlewares
 app.use(cors({ origin: ENV.FRONTEND_URL }));
+app.use(expressAsyncHandler);
 app.use(clerkMiddleware); // attaches the auth obj to the request
 app.use(express.json()); // parse the json body
 app.use(express.urlencoded({ extended: true })); // parse form data
 
 // routes
 app.get("/", (req, res) => res.status(200).json({ success: true }));
+const baseApiUrl = "/api/v1";
+app.use(baseApiUrl + "/users", userRoutes);
+app.use(baseApiUrl + "/products", productRoutes);
+app.use(baseApiUrl + "/comments", commentRoutes);
 
 // server
 app.listen(ENV.PORT, () =>
