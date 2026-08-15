@@ -24,6 +24,8 @@ const errorHandler = (
     message,
     stack: ENV.NODE_ENV === "production" ? null : err.stack,
   });
+
+  console.error("Error: " + err.message + ", Error stack: " + err.stack);
 };
 
 export { errorHandler, notFound };
