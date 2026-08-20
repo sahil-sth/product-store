@@ -20,7 +20,6 @@ export const syncUser = async (req: Request, res: Response) => {
     id: userId,
     email,
     name,
-    imageUrl,
   });
 
   res.status(200).json({ user });
