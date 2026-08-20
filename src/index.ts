@@ -12,7 +12,7 @@ const app = express();
 
 // add middlewares
 app.use(cors({ origin: ENV.FRONTEND_URL }));
-app.use(clerkMiddleware); // attaches the auth obj to the request
+app.use(clerkMiddleware()); // attaches the auth obj to the request
 app.use(express.json()); // parse the json body
 app.use(express.urlencoded({ extended: true })); // parse form data
 
