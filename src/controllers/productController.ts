@@ -11,9 +11,6 @@ export const getProductById = async (
   res: Response,
 ) => {
   const { id } = req.params;
-  if (!id) {
-    throw new Error("no id provided");
-  }
 
   const product = await queries.getProductById(id);
   if (!product) return res.status(404).json({ error: "Product not found" });
@@ -30,7 +27,7 @@ export const getMyProducts = async (req: Request, res: Response) => {
 
   const products = await queries.getProductsByUserId(userId);
   if (!products) {
-    return res.status(404).json({ error: "No products" });
+    return res.status(200).json({ products: [] });
   }
 
   res.status(200).json({ products });
@@ -75,7 +72,7 @@ export const updateProduct = async (
   const existingProduct = await queries.getProductById(productId);
 
   if (!existingProduct) {
-    res.status(400);
+    res.status(404);
     throw new Error("No products found");
   }
 
@@ -91,4 +88,33 @@ export const updateProduct = async (
   });
 
   res.status(200).json({ product: updatedProduct });
+};
+// Authenticated and Authorized
+export const deleteProduct = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
+  const { userId } = getAuth(req);
+  const productId = req.params.id;
+
+  if (!userId) {
+    res.status(401);
+    throw new Error("Unauthorised user");
+  }
+
+  const existingProduct = await queries.getProductById(productId);
+
+  if (!existingProduct) {
+    res.status(404);
+    throw new Error(`Product with ID: ${productId} does not exist.`);
+  }
+
+  if (existingProduct.userId !== userId) {
+    res.status(403);
+    throw new Error("User cannot delete other user's products");
+  }
+
+  const deletedProduct = await queries.deleteProduct(productId);
+
+  res.status(200).json({ product: deletedProduct });
 };
