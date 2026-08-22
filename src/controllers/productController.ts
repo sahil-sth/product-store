@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import * as queries from "../db/queries.js";
 import { getAuth } from "@clerk/express";
 export const getAllProducts = async (req: Request, res: Response) => {
-  const products = queries.getAllProducts();
+  const products = await queries.getAllProducts();
   return res.status(200).json({ products });
 };
 
