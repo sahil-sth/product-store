@@ -15,14 +15,13 @@ export const getProductById = async (
   const product = await queries.getProductById(id);
   if (!product) return res.status(404).json({ error: "Product not found" });
 
-  res.status(200).json(product);
+  return res.status(200).json(product);
 };
 // Private route
 export const getMyProducts = async (req: Request, res: Response) => {
   const { userId } = getAuth(req);
   if (!userId) {
-    res.status(401);
-    throw new Error("No authenticated user");
+    return res.status(401).json({ error: "No authenticated user" });
   }
 
   const products = await queries.getProductsByUserId(userId);
@@ -36,15 +35,15 @@ export const getMyProducts = async (req: Request, res: Response) => {
 export const createProduct = async (req: Request, res: Response) => {
   const { userId } = getAuth(req);
   if (!userId) {
-    res.status(401);
-    throw new Error("Unauthenticated user");
+    return res.status(401).json({ error: "Unauthenticated user" });
   }
 
   const { title, description, imageUrl } = req.body;
 
   if (!title || !description || !imageUrl) {
-    res.status(400);
-    throw new Error("Title, description, and imageUrl are required");
+    return res
+      .status(400)
+      .json({ error: "Title, description, and imageUrl are required" });
   }
 
   const product = await queries.createProduct({
@@ -54,7 +53,7 @@ export const createProduct = async (req: Request, res: Response) => {
     userId,
   });
 
-  res.status(201).json({ product });
+  return res.status(201).json({ product });
 };
 // protected route
 export const updateProduct = async (
@@ -66,19 +65,18 @@ export const updateProduct = async (
   const { title, description, imageUrl } = req.body;
 
   if (!userId) {
-    res.status(401);
-    throw new Error("Unauthorized access");
+    return res.status(401).json({ error: "Unauthorized access" });
   }
   const existingProduct = await queries.getProductById(productId);
 
   if (!existingProduct) {
-    res.status(404);
-    throw new Error("No products found");
+    return res.status(404).json({ error: "No products found" });
   }
 
   if (userId !== existingProduct.userId) {
-    res.status(403);
-    throw new Error("Cannot modify other user's product");
+    return res
+      .status(403)
+      .json({ error: "Cannot modify other user's product" });
   }
 
   const updatedProduct = await queries.updateProduct(productId, {
@@ -87,7 +85,7 @@ export const updateProduct = async (
     imageUrl,
   });
 
-  res.status(200).json({ product: updatedProduct });
+  return res.status(200).json({ product: updatedProduct });
 };
 // Authenticated and Authorized
 export const deleteProduct = async (
@@ -98,23 +96,24 @@ export const deleteProduct = async (
   const productId = req.params.id;
 
   if (!userId) {
-    res.status(401);
-    throw new Error("Unauthorised user");
+    return res.status(401).json({ error: "Unauthorised user" });
   }
 
   const existingProduct = await queries.getProductById(productId);
 
   if (!existingProduct) {
-    res.status(404);
-    throw new Error(`Product with ID: ${productId} does not exist.`);
+    return res
+      .status(404)
+      .json({ error: `Product with ID: ${productId} does not exist.` });
   }
 
   if (existingProduct.userId !== userId) {
-    res.status(403);
-    throw new Error("User cannot delete other user's products");
+    return res
+      .status(403)
+      .json({ error: "User cannot delete other user's products" });
   }
 
   const deletedProduct = await queries.deleteProduct(productId);
 
-  res.status(200).json({ product: deletedProduct });
+  return res.status(200).json({ product: deletedProduct });
 };
