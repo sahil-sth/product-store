@@ -7,7 +7,7 @@ if (!API_URL) {
 }
 
 const axiosService = axios.create({
-  baseUrl: API_URL,
+  baseURL: API_URL,
   withCredentials: true,
 });
 
