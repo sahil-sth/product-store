@@ -6,8 +6,10 @@ import ProductPage from "./pages/ProductPage";
 import ProfilePage from "./pages/ProfilePage";
 import CreatePage from "./pages/CreatePage";
 import EditProductPage from "./pages/EditProductPage";
+import { useQuery } from "@tanstack/react-query";
 
 function App() {
+  const { data, isError, isLoading, refetch } = useQuery();
   return (
     <>
       <div className="min-h-screen bg-base-100">
