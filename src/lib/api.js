@@ -5,9 +5,9 @@ export const syncUser = async (userData) => {
   return data;
 };
 
-export const getProducts = async () => {
+export const getAllProducts = async () => {
   const { data } = await axiosService.get("/products");
-  return data;
+  return data.products;
 };
 
 export const getProductById = async (productId) => {
