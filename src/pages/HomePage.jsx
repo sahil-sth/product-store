@@ -4,6 +4,7 @@ import { PackageIcon, SparklesIcon } from "lucide-react";
 
 import { useProducts } from "../hooks/useProducts";
 import LoadingSpinner from "../components/LoadingSpinner";
+import ProductCard from "../components/ProductCard";
 
 const HomePage = () => {
   const { isLoading, data: products, error } = useProducts();
@@ -69,7 +70,9 @@ const HomePage = () => {
             </div>
           </div>
         ) : (
-          <p>products are there!</p>
+          products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))
         )}
       </div>
     </div>
