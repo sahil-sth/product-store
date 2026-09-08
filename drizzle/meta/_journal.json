@@ -15,6 +15,13 @@
       "when": 1787194939721,
       "tag": "0001_nasty_maria_hill",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788839835131,
+      "tag": "0002_brown_molten_man",
+      "breakpoints": true
     }
   ]
 }
