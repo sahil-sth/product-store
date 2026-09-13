@@ -122,7 +122,11 @@ const ProductPage = () => {
       {/* Comments Section */}
       <div className="card bg-base-300">
         <div className="card-body">
-          <CommentsSection comments={product.comments} productId={product.id} />
+          <CommentsSection
+            comments={product.comments}
+            productId={id}
+            currentUserId={userId}
+          />
         </div>
       </div>
     </div>
