@@ -36,7 +36,7 @@ const THEMES = [
   "sunset",
 ];
 
-const DEFAULT_THEME = "forest";
+const DEFAULT_THEME = "autumn";
 
 const ThemeSelector = () => {
   const [theme, setTheme] = useState(() => {
