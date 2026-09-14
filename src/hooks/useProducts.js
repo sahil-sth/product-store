@@ -4,11 +4,19 @@ import {
   createProduct,
   getProductById,
   deleteProduct,
+  getMyProducts,
 } from "../lib/api";
 export const useProducts = () => {
   return useQuery({
     queryKey: ["allProducts"],
     queryFn: getAllProducts,
+  });
+};
+
+export const useGetMyProducts = () => {
+  return useQuery({
+    queryKey: ["myProducts"],
+    queryFn: getMyProducts,
   });
 };
 
