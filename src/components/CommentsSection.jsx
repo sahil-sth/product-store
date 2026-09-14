@@ -14,7 +14,7 @@ const CommentsSection = ({ productId, comments = [], currentUserId }) => {
   const { isSignedIn } = useAuth();
   const [comment, setComment] = useState("");
   const createComment = useCreateComment();
-  const deleteComment = useDeleteComment();
+  const deleteComment = useDeleteComment(productId);
   console.log(comments);
   const handleSubmit = (e) => {
     e.preventDefault();
