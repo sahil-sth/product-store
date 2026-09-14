@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router";
-import { useDeleteProduct, useGetMyProducts } from "../hooks/useProducts";
+import { useDeleteProduct, useMyProducts } from "../hooks/useProducts";
 import LoadingSpinner from "../components/LoadingSpinner";
 import {
   PlusIcon,
@@ -11,7 +11,7 @@ import {
 
 const ProfilePage = () => {
   const navigate = useNavigate();
-  const { data, isLoading } = useGetMyProducts();
+  const { data, isLoading } = useMyProducts();
   const products = data?.products ?? [];
   const deleteProduct = useDeleteProduct();
 

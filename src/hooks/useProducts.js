@@ -13,7 +13,7 @@ export const useProducts = () => {
   });
 };
 
-export const useGetMyProducts = () => {
+export const useMyProducts = () => {
   return useQuery({
     queryKey: ["myProducts"],
     queryFn: getMyProducts,
