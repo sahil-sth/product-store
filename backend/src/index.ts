@@ -1,6 +1,7 @@
 import express from "express";
 import { ENV } from "./config/env.js";
 import cors from "cors";
+import path from "path";
 import { clerkMiddleware } from "@clerk/express";
 import userRoutes from "./routes/userRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
@@ -17,14 +18,29 @@ app.use(express.json()); // parse the json body
 app.use(express.urlencoded({ extended: true })); // parse form data
 
 // routes
-app.get("/", (req, res) => res.status(200).json({ success: true }));
 const baseApiUrl = "/api/v1";
+app.get(baseApiUrl + "/health", (req, res) =>
+  res.status(200).json({ message: "API for product-store" }),
+);
 app.use(baseApiUrl + "/users", userRoutes);
 app.use(baseApiUrl + "/products", productRoutes);
 app.use(baseApiUrl + "/comments", commentRoutes);
 
-// error and not found (custom middlewares)
-app.use(notFound);
+if (ENV.NODE_ENV === "production") {
+  const ___dirname = path.resolve();
+  // serve static files from frontend/dist
+  app.use(express.static(path.join(___dirname, "../frontend/dist")));
+
+  // handle SPA routing --send al non-API routes to index.html: our react app
+  app.get("/{*any}/", (req, res) => {
+    res.sendFile(path.join(___dirname, "../frontend/dist/index.html"));
+  });
+}
+
+// this is not used because if a user calls any unknown routes the code above already triggers them
+// app.use(notFound);
+
+// error (custom middlewares)
 app.use(errorHandler);
 
 // server
