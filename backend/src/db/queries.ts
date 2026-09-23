@@ -9,19 +9,35 @@ import {
   type NewComment,
 } from "./schema.js";
 
+// the fields that can actually be returned from the query
+const publicUserFields = {
+  id: users.id,
+  email: users.email,
+  name: users.name,
+  createdAt: users.createdAt,
+  updatedAt: users.updatedAt,
+};
+
 // User Queries
 export const createUser = async (data: NewUser) => {
-  const [user] = await db.insert(users).values(data).returning();
+  const [user] = await db
+    .insert(users)
+    .values(data)
+    .returning(publicUserFields);
   return user;
 };
 
 export const getUserById = async (id: string) => {
-  return db.query.users.findFirst({ where: eq(users.id, id) });
+  return db.query.users.findFirst({
+    where: eq(users.id, id),
+    columns: { passwordHash: false },
+  });
 };
 
 export const updateUser = async (id: string, data: Partial<NewUser>) => {
   const existingUser = await db.query.users.findFirst({
     where: eq(users.id, id),
+    columns: { id: true },
   });
   if (!existingUser) {
     throw new Error(`User with id: ${id} does not exist to update.`);
@@ -30,7 +46,7 @@ export const updateUser = async (id: string, data: Partial<NewUser>) => {
     .update(users)
     .set(data)
     .where(eq(users.id, id))
-    .returning();
+    .returning(publicUserFields);
   return user;
 };
 
@@ -49,7 +65,7 @@ export const upsertUser = async (data: NewUser) => {
       target: users.id,
       set: data,
     })
-    .returning();
+    .returning(publicUserFields);
   return user;
 };
 
@@ -61,7 +77,7 @@ export const createProduct = async (data: NewProduct) => {
 
 export const getAllProducts = async () => {
   return db.query.products.findMany({
-    with: { user: true },
+    with: { user: { columns: { passwordHash: false } } },
     orderBy: (products, { desc }) => [desc(products.createdAt)],
   });
 };
@@ -69,9 +85,9 @@ export const getAllProducts = async () => {
 export const getProductById = async (id: string) => {
   return db.query.products.findFirst({
     with: {
-      user: true,
+      user: { columns: { passwordHash: false } },
       comments: {
-        with: { user: true },
+        with: { user: { columns: { passwordHash: false } } },
         orderBy: (comments, { desc }) => [desc(comments.createdAt)],
       },
     },
@@ -83,7 +99,7 @@ export const getProductsByUserId = async (userId: string) => {
   return db.query.products.findMany({
     where: eq(products.userId, userId),
     with: {
-      user: true,
+      user: { columns: { passwordHash: false } },
     },
     orderBy: (products, { desc }) => [desc(products.createdAt)],
   });
@@ -143,7 +159,7 @@ export const deleteComment = async (id: string) => {
 export const getCommentById = async (id: string) => {
   const comment = await db.query.comments.findFirst({
     where: eq(comments.id, id),
-    with: { user: true },
+    with: { user: { columns: { passwordHash: false } } },
   });
   return comment;
 };
