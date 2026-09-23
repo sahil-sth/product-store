@@ -23,7 +23,6 @@
   },
   "homepage": "https://github.com/sahil-sth/product-store-backend#readme",
   "dependencies": {
-    "@clerk/express": "^2.1.50",
     "argon2": "^0.45.1",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",

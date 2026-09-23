@@ -2,7 +2,6 @@ import express from "express";
 import { ENV } from "./config/env.js";
 import cors from "cors";
 import path from "path";
-import { clerkMiddleware } from "@clerk/express";
 import userRoutes from "./routes/userRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
@@ -13,7 +12,6 @@ const app = express();
 
 // add middlewares
 app.use(cors({ origin: ENV.FRONTEND_URL, credentials: true }));
-app.use(clerkMiddleware()); // attaches the auth obj to the request
 app.use(express.json()); // parse the json body
 app.use(express.urlencoded({ extended: true })); // parse form data
 
