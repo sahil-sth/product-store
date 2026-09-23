@@ -29,6 +29,20 @@
       "when": 1790131869851,
       "tag": "0003_fixed_enchantress",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790134177143,
+      "tag": "0004_high_moonstone",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790134248608,
+      "tag": "0005_cuddly_revanche",
+      "breakpoints": true
     }
   ]
 }
