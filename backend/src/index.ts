@@ -1,7 +1,9 @@
 import express from "express";
-import { ENV } from "./config/env.js";
 import cors from "cors";
 import path from "path";
+import cookieParser from "cookie-parser";
+
+import { ENV } from "./config/env.js";
 import userRoutes from "./routes/userRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
@@ -14,6 +16,7 @@ const app = express();
 app.use(cors({ origin: ENV.FRONTEND_URL, credentials: true }));
 app.use(express.json()); // parse the json body
 app.use(express.urlencoded({ extended: true })); // parse form data
+app.use(cookieParser());
 
 // routes
 const baseApiUrl = "/api/v1";
