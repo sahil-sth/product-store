@@ -27,8 +27,15 @@ export const createUser = async (data: NewUser) => {
   return user;
 };
 
+export const getUserByEmail = async (email: string) => {
+  return await db.query.users.findFirst({
+    where: eq(users.email, email),
+    columns: { passwordHash: false },
+  });
+};
+
 export const getUserById = async (id: string) => {
-  return db.query.users.findFirst({
+  return await db.query.users.findFirst({
     where: eq(users.id, id),
     columns: { passwordHash: false },
   });
