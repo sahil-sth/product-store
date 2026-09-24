@@ -1,14 +1,16 @@
 import type { Request, Response } from "express";
 import * as queries from "../db/queries.js";
-import { getAuth } from "@clerk/express";
 
 export const createComment = async (
   req: Request<{ productId: string }>,
   res: Response,
 ) => {
-  const { userId } = getAuth(req);
+  if (!req.user) {
+    return res.status(401).json({ error: "No authenticated user" });
+  }
+  const { id: userId } = req.user;
   if (!userId) {
-    return res.status(401).json({ error: "Unauthenticated user" });
+    return res.status(401).json({ error: "No authenticated user" });
   }
 
   const { productId } = req.params;
@@ -36,9 +38,12 @@ export const deleteComment = async (
   req: Request<{ commentId: string }>,
   res: Response,
 ) => {
-  const { userId } = getAuth(req);
+  if (!req.user) {
+    return res.status(401).json({ error: "No authenticated user" });
+  }
+  const { id: userId } = req.user;
   if (!userId) {
-    return res.status(401).json({ error: "Unauthenticated user" });
+    return res.status(401).json({ error: "No authenticated user" });
   }
 
   const { commentId } = req.params;

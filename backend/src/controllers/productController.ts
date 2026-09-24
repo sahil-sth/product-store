@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import * as queries from "../db/queries.js";
-import { getAuth } from "@clerk/express";
+
 export const getAllProducts = async (req: Request, res: Response) => {
   const products = await queries.getAllProducts();
   return res.status(200).json({ products });
@@ -19,7 +19,10 @@ export const getProductById = async (
 };
 // Private route
 export const getMyProducts = async (req: Request, res: Response) => {
-  const { userId } = getAuth(req);
+  if (!req.user) {
+    return res.status(401).json({ error: "No authenticated user" });
+  }
+  const { id: userId } = req.user;
   if (!userId) {
     return res.status(401).json({ error: "No authenticated user" });
   }
@@ -33,11 +36,13 @@ export const getMyProducts = async (req: Request, res: Response) => {
 };
 
 export const createProduct = async (req: Request, res: Response) => {
-  const { userId } = getAuth(req);
-  if (!userId) {
-    return res.status(401).json({ error: "Unauthenticated user" });
+  if (!req.user) {
+    return res.status(401).json({ error: "No authenticated user" });
   }
-
+  const { id: userId } = req.user;
+  if (!userId) {
+    return res.status(401).json({ error: "No authenticated user" });
+  }
   const { title, description, imageUrl } = req.body;
 
   if (!title || !description || !imageUrl) {
@@ -49,7 +54,6 @@ export const createProduct = async (req: Request, res: Response) => {
   const product = await queries.createProduct({
     title,
     description,
-    imageUrl,
     userId,
   });
 
@@ -60,7 +64,13 @@ export const updateProduct = async (
   req: Request<{ id: string }>,
   res: Response,
 ) => {
-  const { userId } = getAuth(req);
+  if (!req.user) {
+    return res.status(401).json({ error: "No authenticated user" });
+  }
+  const { id: userId } = req.user;
+  if (!userId) {
+    return res.status(401).json({ error: "No authenticated user" });
+  }
   const productId = req.params.id;
   const { title, description, imageUrl } = req.body;
 
@@ -82,7 +92,6 @@ export const updateProduct = async (
   const updatedProduct = await queries.updateProduct(productId, {
     title,
     description,
-    imageUrl,
   });
 
   return res.status(200).json({ product: updatedProduct });
@@ -92,7 +101,13 @@ export const deleteProduct = async (
   req: Request<{ id: string }>,
   res: Response,
 ) => {
-  const { userId } = getAuth(req);
+  if (!req.user) {
+    return res.status(401).json({ error: "No authenticated user" });
+  }
+  const { id: userId } = req.user;
+  if (!userId) {
+    return res.status(401).json({ error: "No authenticated user" });
+  }
   const productId = req.params.id;
 
   if (!userId) {
