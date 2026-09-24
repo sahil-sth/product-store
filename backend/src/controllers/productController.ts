@@ -20,11 +20,11 @@ export const getProductById = async (
 // Private route
 export const getMyProducts = async (req: Request, res: Response) => {
   if (!req.user) {
-    return res.status(401).json({ error: "No authenticated user" });
+    return res.status(401).json({ error: "Unauthenticated User" });
   }
   const { id: userId } = req.user;
   if (!userId) {
-    return res.status(401).json({ error: "No authenticated user" });
+    return res.status(401).json({ error: "Unauthenticated User" });
   }
 
   const products = await queries.getProductsByUserId(userId);
@@ -37,11 +37,11 @@ export const getMyProducts = async (req: Request, res: Response) => {
 
 export const createProduct = async (req: Request, res: Response) => {
   if (!req.user) {
-    return res.status(401).json({ error: "No authenticated user" });
+    return res.status(401).json({ error: "Unauthenticated User" });
   }
   const { id: userId } = req.user;
   if (!userId) {
-    return res.status(401).json({ error: "No authenticated user" });
+    return res.status(401).json({ error: "Unauthenticated User" });
   }
   const { title, description, imageUrl } = req.body;
 
@@ -55,6 +55,7 @@ export const createProduct = async (req: Request, res: Response) => {
     title,
     description,
     userId,
+    imageUrl,
   });
 
   return res.status(201).json({ product });
@@ -65,18 +66,15 @@ export const updateProduct = async (
   res: Response,
 ) => {
   if (!req.user) {
-    return res.status(401).json({ error: "No authenticated user" });
+    return res.status(401).json({ error: "Unauthenticated User" });
   }
   const { id: userId } = req.user;
   if (!userId) {
-    return res.status(401).json({ error: "No authenticated user" });
+    return res.status(401).json({ error: "Unauthenticated User" });
   }
   const productId = req.params.id;
   const { title, description, imageUrl } = req.body;
 
-  if (!userId) {
-    return res.status(401).json({ error: "Unauthorized access" });
-  }
   const existingProduct = await queries.getProductById(productId);
 
   if (!existingProduct) {
@@ -92,6 +90,7 @@ export const updateProduct = async (
   const updatedProduct = await queries.updateProduct(productId, {
     title,
     description,
+    imageUrl,
   });
 
   return res.status(200).json({ product: updatedProduct });
@@ -102,17 +101,13 @@ export const deleteProduct = async (
   res: Response,
 ) => {
   if (!req.user) {
-    return res.status(401).json({ error: "No authenticated user" });
+    return res.status(401).json({ error: "Unauthenticated User" });
   }
   const { id: userId } = req.user;
   if (!userId) {
-    return res.status(401).json({ error: "No authenticated user" });
+    return res.status(401).json({ error: "Unauthenticated User" });
   }
   const productId = req.params.id;
-
-  if (!userId) {
-    return res.status(401).json({ error: "Unauthorised user" });
-  }
 
   const existingProduct = await queries.getProductById(productId);
 
