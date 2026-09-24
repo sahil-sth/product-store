@@ -50,6 +50,13 @@
       "when": 1790216648699,
       "tag": "0006_bright_groot",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1790218871694,
+      "tag": "0007_far_sunfire",
+      "breakpoints": true
     }
   ]
 }
