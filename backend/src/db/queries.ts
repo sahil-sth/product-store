@@ -34,6 +34,12 @@ export const getUserByEmail = async (email: string) => {
   });
 };
 
+export const getUserForLogin = async (email: string) => {
+  return await db.query.users.findFirst({
+    where: eq(users.email, email),
+  });
+};
+
 export const getUserById = async (id: string) => {
   return await db.query.users.findFirst({
     where: eq(users.id, id),
