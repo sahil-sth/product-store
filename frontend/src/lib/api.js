@@ -49,3 +49,18 @@ export const deleteComment = async ({ commentId }) => {
   const { data } = await axiosService.delete(`/comments/${commentId}`);
   return data;
 };
+
+export const me = async () => {
+  try {
+    const { data } = await axiosService.get("/users/me");
+    return data.user;
+  } catch (error) {
+    // 401 means that the user is not logged in/authenticated
+    if (error.response?.status === 401) {
+      return null;
+    }
+
+    // this is a network/server error
+    throw error;
+  }
+};
