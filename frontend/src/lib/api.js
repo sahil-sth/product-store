@@ -64,3 +64,11 @@ export const me = async () => {
     throw error;
   }
 };
+
+export const login = async ({ email, password }) => {
+  const { data } = await axiosService.post("/users/login", {
+    email,
+    password,
+  });
+  return data.user;
+};
