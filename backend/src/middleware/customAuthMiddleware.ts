@@ -25,10 +25,12 @@ export const protect = async (
     const user = await getUserById(userId);
 
     if (!user) {
-      return res.status(401).json("Invalid userId provided");
+      return res.status(401).json({ message: "Invalid userId provided" });
     }
 
     req.user = user;
+    next();
   }
-  next();
+
+  return res.status(401).json({ message: "Invalid token" });
 };
