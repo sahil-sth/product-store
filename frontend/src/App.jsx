@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
 import ProductPage from "./pages/ProductPage";
 import ProfilePage from "./pages/ProfilePage";
+import RegisterPage from "./pages/RegisterPage";
 import CreatePage from "./pages/CreatePage";
 import EditProductPage from "./pages/EditProductPage";
 import useAuthRequest from "./hooks/useAuthRequest";
@@ -22,6 +23,8 @@ function App() {
           <Routes>
             <Route path="" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+
             <Route path="/product/:id" element={<ProductPage />} />
             <Route
               path="/profile"
