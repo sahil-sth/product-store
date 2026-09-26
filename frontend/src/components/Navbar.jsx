@@ -1,6 +1,11 @@
 import { Link } from "react-router";
-import { SignInButton, SignUpButton, UserButton, useAuth } from "@clerk/react";
-import { ShoppingBagIcon, PlusIcon, UserIcon } from "lucide-react";
+import useAuth from "../hooks/useAuth";
+import {
+  ShoppingBagIcon,
+  PlusIcon,
+  UserIcon,
+  UserPlus2Icon,
+} from "lucide-react";
 import ThemeSelector from "./ThemeSelector";
 
 const Navbar = () => {
@@ -28,16 +33,19 @@ const Navbar = () => {
                 <UserIcon className="size-4" />
                 <span className="hidden sm:inline">Profile</span>
               </Link>
-              <UserButton />
+              <button>Logout</button>
             </>
           ) : (
             <>
-              <SignInButton mode="modal">
-                <button className="btn btn-ghost btn-sm">Sign in</button>
-              </SignInButton>
-              <SignUpButton mode="modal">
-                <button className="btn btn-primary btn-sm">Register</button>
-              </SignUpButton>
+              <Link to="/login" className="btn btn-ghost btn-sm gap-1">
+                <UserIcon className="size-4" />
+                <span className="hidden sm:inline">Login</span>
+              </Link>
+
+              <Link to="/register" className="btn btn-ghost btn-sm gap-1">
+                <UserPlus2Icon className="size-4" />
+                <span className="hidden sm:inline">Register</span>
+              </Link>
             </>
           )}
         </div>
