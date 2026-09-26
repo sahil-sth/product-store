@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 
 import * as queries from "../db/queries.js";
 import { ENV } from "../config/env.js";
-import generateToken from "../utils/generateToken.js";
+import generateTokenAndSendAsCookie from "../utils/generateToken.js";
 
 export const signUp = async (req: Request, res: Response) => {
   // when body is missing
@@ -31,7 +31,7 @@ export const signUp = async (req: Request, res: Response) => {
 
   // send the body to the user
   const user = await queries.createUser({ email, passwordHash, name });
-  const token = generateToken(user.id, res);
+  generateTokenAndSendAsCookie(user.id, res);
   res.status(201).json({ user });
 };
 // login functionality
@@ -62,7 +62,7 @@ export const login = async (req: Request, res: Response) => {
     return res.status(401).json({ error: "Incorrect email or password" });
   }
 
-  generateToken(user.id, res);
+  generateTokenAndSendAsCookie(user.id, res);
   // Exclude the password hash from the response.
   const { passwordHash, ...sanitizedUser } = user;
   return res.status(200).json({ user: sanitizedUser });

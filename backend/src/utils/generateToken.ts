@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { Response } from "express";
 import { ENV } from "../config/env.js";
 
-const generateToken = (userId: string, res: Response) => {
+const generateTokenAndSendAsCookie = (userId: string, res: Response) => {
   if (!userId) {
     throw new Error("userId cannot be empty to create a json web token");
   }
@@ -18,4 +18,4 @@ const generateToken = (userId: string, res: Response) => {
   });
 };
 
-export default generateToken;
+export default generateTokenAndSendAsCookie;
