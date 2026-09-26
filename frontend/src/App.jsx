@@ -7,12 +7,12 @@ import ProfilePage from "./pages/ProfilePage";
 import CreatePage from "./pages/CreatePage";
 import EditProductPage from "./pages/EditProductPage";
 import useAuthRequest from "./hooks/useAuthRequest";
-import useUserSync from "./hooks/useUserSync";
+
 import LoginPage from "./pages/LoginPage";
 
 function App() {
   const { isClerkLoaded, isSignedIn } = useAuthRequest();
-  useUserSync();
+
   if (!isClerkLoaded) return null;
   return (
     <>
