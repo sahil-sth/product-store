@@ -1,24 +1,32 @@
 import { Link, useNavigate } from "react-router";
 import { ArrowLeftIcon, UserPlus2Icon } from "lucide-react";
 import { useState } from "react";
-import { useLogin } from "../hooks/useUsers";
+import { toast } from "react-toastify";
+
+import { useSignup } from "../hooks/useUsers";
+
 const SignupPage = () => {
-  const login = useLogin();
+  const signup = useSignup();
   const navigate = useNavigate();
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    login.mutate(formData, {
-      onSuccess: () => {
-        navigate("/", { replace: true });
-      },
-    });
-  };
+
   const [formData, setFormData] = useState({
     email: "",
     name: "",
     password: "",
     confirmPassword: "",
   });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match");
+    }
+    signup.mutate(formData, {
+      onSuccess: () => {
+        navigate("/", { replace: true });
+      },
+    }); //TODO: add more functionality
+  };
   return (
     <div className="max-w-lg mx-auto">
       <Link to="/" className="btn btn-ghost btn-sm gap-1 mb-4">
@@ -52,7 +60,26 @@ const SignupPage = () => {
                 required
               />
             </div>
+            {/* Name Input */}
+            <div className="space-y-2">
+              <label htmlFor="name" className="block text-sm font-medium">
+                Name
+              </label>
 
+              <input
+                id="name"
+                name="name"
+                type="text"
+                autoComplete="name"
+                placeholder="Full name"
+                className="input w-full rounded-lg border-base-300 bg-base-200"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                required
+              />
+            </div>
             {/* Password Input */}
             <div className="space-y-2">
               <label htmlFor="email" className="block text-sm font-medium">
@@ -72,12 +99,30 @@ const SignupPage = () => {
                 required
               />
             </div>
+            {/* Confirm Password Input */}
+            <div className="space-y-2">
+              <label htmlFor="email" className="block text-sm font-medium">
+                Confirm Password
+              </label>
+
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                className="input w-full rounded-lg border-base-300 bg-base-200"
+                value={formData.confirmPassword}
+                onChange={(e) =>
+                  setFormData({ ...formData, confirmPassword: e.target.value })
+                }
+                required
+              />
+            </div>
             <button
               type="submit"
               className="btn btn-primary w-full"
-              disabled={login.isPending}
+              disabled={signup.isPending}
             >
-              {login.isPending ? (
+              {signup.isPending ? (
                 <span className="loading loading-spinner"></span>
               ) : (
                 "Sign up"
