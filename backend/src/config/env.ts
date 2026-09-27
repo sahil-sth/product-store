@@ -8,7 +8,10 @@ if (
   !process.env.NODE_ENV ||
   !process.env.FRONTEND_URL ||
   !process.env.JWT_SECRET ||
-  !process.env.BCRYPT_SALT_ROUND
+  !process.env.BCRYPT_SALT_ROUND ||
+  !process.env.CLOUDINARY_CLOUD_NAME ||
+  !process.env.CLOUDINARY_API_KEY ||
+  !process.env.CLOUDINARY_API_SECRET
 ) {
   throw new Error("Missing required environment variables");
 }
@@ -20,4 +23,7 @@ export const ENV = {
   JWT_SECRET: process.env.JWT_SECRET,
   FRONTEND_URL: process.env.FRONTEND_URL,
   BCRYPT_SALT_ROUND: Number(process.env.BCRYPT_SALT_ROUND),
+  CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
+  CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
 };
