@@ -20,6 +20,7 @@ const SignupPage = () => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords do not match");
+      return;
     }
     signup.mutate(formData, {
       onSuccess: () => {
