@@ -1,4 +1,6 @@
 import { Navigate, Route, Routes } from "react-router";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/ReactToastify.css";
 
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
@@ -17,6 +19,7 @@ function App() {
       <div className="min-h-screen bg-base-100">
         <Navbar />
         <main className="max-w-5xl mx-auto px-4 py-8">
+          <ToastContainer />
           <Routes>
             <Route path="" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
