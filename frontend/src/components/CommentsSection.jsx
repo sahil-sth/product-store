@@ -6,9 +6,10 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import { useState } from "react";
-import { SignInButton, useAuth } from "@clerk/react";
 
+import useAuth from "../hooks/useAuth";
 import { useCreateComment, useDeleteComment } from "../hooks/useComments";
+import { Link } from "react-router";
 
 const CommentsSection = ({ productId, comments = [], currentUserId }) => {
   const { isSignedIn } = useAuth();
@@ -62,11 +63,9 @@ const CommentsSection = ({ productId, comments = [], currentUserId }) => {
           <span className="text-sm text-base-content/60">
             Sign in to join the conversation
           </span>
-          <SignInButton mode="modal">
-            <button className="btn btn-primary btn-sm gap-1">
-              <LogInIcon className="size-4" /> Sign In
-            </button>
-          </SignInButton>
+          <Link className="btn btn-primary btn-sm gap-1">
+            <LogInIcon className="size-4" /> Sign In
+          </Link>
         </div>
       )}
       <div className="space-y-2 max-h-80 overscroll-y-auto">

@@ -5,9 +5,10 @@ import {
   CalendarIcon,
   UserIcon,
 } from "lucide-react";
-import { useAuth } from "@clerk/react";
+
 import { useParams, Link, useNavigate } from "react-router";
 
+import useAuth from "../hooks/useAuth";
 import LoadingSpinner from "../components/LoadingSpinner";
 import CommentsSection from "../components/CommentsSection";
 import { useProduct, useDeleteProduct } from "../hooks/useProducts";
