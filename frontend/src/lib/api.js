@@ -72,3 +72,12 @@ export const login = async ({ email, password }) => {
   });
   return data.user;
 };
+
+export const signup = async ({ email, name, password }) => {
+  const { data } = await axiosService.post("/users/signup", {
+    name,
+    email,
+    password,
+  });
+  return data.user;
+};
