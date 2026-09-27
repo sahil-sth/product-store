@@ -30,5 +30,14 @@ export const useSignup = () => {
 };
 
 export const useLogout = () => {
-  return useMutation({ mutationFn: logout });
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: logout,
+    onSuccess: async () => {
+      // Prevent an older session request from restoring the logged-out user.
+      await queryClient.cancelQueries({ queryKey: sessionKey });
+      queryClient.setQueryData(sessionKey, null);
+    },
+  });
 };

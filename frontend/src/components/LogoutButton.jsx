@@ -6,8 +6,9 @@ const LogoutButton = () => {
   const logout = useLogout();
 
   const handleClick = () => {
-    console.log("Logout button clicked");
-    logout.mutate(null, { onSuccess: navigate("/", { replace: true }) });
+    logout.mutate(null, {
+      onSuccess: () => navigate("/", { replace: true }),
+    });
   };
   return (
     <button
