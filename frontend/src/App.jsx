@@ -19,7 +19,11 @@ function App() {
       <div className="min-h-screen bg-base-100">
         <Navbar />
         <main className="max-w-5xl mx-auto px-4 py-8">
-          <ToastContainer />
+          <ToastContainer
+            position="top-right"
+            className="app-toasts"
+            autoClose={3000}
+          />
           <Routes>
             <Route path="" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />

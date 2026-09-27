@@ -2,3 +2,28 @@
 @plugin "daisyui"{
     themes: all;
 };
+
+/* Match the currently selected DaisyUI theme. */
+.app-toasts {
+  --toastify-color-light: var(--color-base-200);
+  --toastify-text-color-light: var(--color-base-content);
+  --toastify-color-success: var(--color-success);
+  --toastify-color-error: var(--color-error);
+  --toastify-color-warning: var(--color-warning);
+  --toastify-color-info: var(--color-info);
+  --toastify-font-family: inherit;
+  --toastify-toast-bd-radius: var(--radius-box);
+}
+
+/* Explicit selector also overrides Toastify's mobile top positioning. */
+.Toastify__toast-container.app-toasts {
+  top: calc(4rem + 1rem + env(safe-area-inset-top, 0px));
+}
+
+.app-toasts .Toastify__toast {
+  border: 1px solid var(--color-base-300);
+}
+
+.app-toasts .Toastify__close-button {
+  color: var(--color-base-content);
+}
