@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { login, signup } from "../lib/api";
+import { login, signup, logout } from "../lib/api";
 import { sessionKey } from "./useAuth";
 
 export const useLogin = () => {
@@ -27,4 +27,8 @@ export const useSignup = () => {
       queryClient.setQueryData(sessionKey, user);
     },
   });
+};
+
+export const useLogout = () => {
+  return useMutation({ mutationFn: logout });
 };

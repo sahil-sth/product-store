@@ -7,6 +7,7 @@ import {
   UserPlus2Icon,
 } from "lucide-react";
 import ThemeSelector from "./ThemeSelector";
+import LogoutButton from "./LogoutButton";
 
 const Navbar = () => {
   const { isSignedIn } = useAuth();
@@ -33,7 +34,7 @@ const Navbar = () => {
                 <UserIcon className="size-4" />
                 <span className="hidden sm:inline">Profile</span>
               </Link>
-              <button>Logout</button>
+              <LogoutButton />
             </>
           ) : (
             <>

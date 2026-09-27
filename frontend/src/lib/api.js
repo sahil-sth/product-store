@@ -81,3 +81,7 @@ export const signup = async ({ email, name, password }) => {
   });
   return data.user;
 };
+
+export const logout = async () => {
+  await axiosService.post("/users/logout");
+};
