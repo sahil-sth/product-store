@@ -7,14 +7,11 @@ import ProfilePage from "./pages/ProfilePage";
 import RegisterPage from "./pages/RegisterPage";
 import CreatePage from "./pages/CreatePage";
 import EditProductPage from "./pages/EditProductPage";
-import useAuthRequest from "./hooks/useAuthRequest";
-
 import LoginPage from "./pages/LoginPage";
+import useAuth from "./hooks/useAuth";
 
 function App() {
-  const { isClerkLoaded, isSignedIn } = useAuthRequest();
-
-  if (!isClerkLoaded) return null;
+  const { isSignedIn } = useAuth();
   return (
     <>
       <div className="min-h-screen bg-base-100">

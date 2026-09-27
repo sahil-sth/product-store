@@ -1,6 +1,7 @@
 import { useNavigate, Link, useParams } from "react-router";
 import { useProduct, useUpdateProduct } from "../hooks/useProducts";
-import { useAuth } from "@clerk/react";
+
+import useAuth from "../hooks/useAuth";
 import LoadingSpinner from "../components/LoadingSpinner";
 import EditProductForm from "../components/EditProductForm";
 const EditProductPage = () => {

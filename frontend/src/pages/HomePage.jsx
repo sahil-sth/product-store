@@ -1,7 +1,7 @@
 import { Link } from "react-router";
-import { SignInButton, useAuth } from "@clerk/react";
 import { PackageIcon, SparklesIcon } from "lucide-react";
 
+import useAuth from "../hooks/useAuth";
 import { useProducts } from "../hooks/useProducts";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ProductCard from "../components/ProductCard";
@@ -43,12 +43,10 @@ const HomePage = () => {
                 <SparklesIcon className="size-4" /> Start Selling
               </Link>
             ) : (
-              <SignInButton mode="modal">
-                <button className="btn btn-primary">
-                  <SparklesIcon className="size-4" />
-                  Start Selling
-                </button>
-              </SignInButton>
+              <Link to="/login" className="btn btn-primary">
+                <SparklesIcon className="size-4" />
+                Start Selling by logging in first
+              </Link>
             )}
           </div>
         </div>
