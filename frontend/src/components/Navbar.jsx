@@ -42,9 +42,9 @@ const Navbar = () => {
                 <span className="hidden sm:inline">Login</span>
               </Link>
 
-              <Link to="/register" className="btn btn-ghost btn-sm gap-1">
+              <Link to="/signup" className="btn btn-ghost btn-sm gap-1">
                 <UserPlus2Icon className="size-4" />
-                <span className="hidden sm:inline">Register</span>
+                <span className="hidden sm:inline">Sign up</span>
               </Link>
             </>
           )}

@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router";
 import { ArrowLeftIcon, UserPlus2Icon } from "lucide-react";
 import { useState } from "react";
 import { useLogin } from "../hooks/useUsers";
-const RegisterPage = () => {
+const SignupPage = () => {
   const login = useLogin();
   const navigate = useNavigate();
   const handleSubmit = (e) => {
@@ -80,7 +80,7 @@ const RegisterPage = () => {
               {login.isPending ? (
                 <span className="loading loading-spinner"></span>
               ) : (
-                "Login"
+                "Sign up"
               )}
             </button>
           </form>
@@ -90,4 +90,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default SignupPage;

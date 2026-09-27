@@ -4,11 +4,11 @@ import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
 import ProductPage from "./pages/ProductPage";
 import ProfilePage from "./pages/ProfilePage";
-import RegisterPage from "./pages/RegisterPage";
 import CreatePage from "./pages/CreatePage";
 import EditProductPage from "./pages/EditProductPage";
 import LoginPage from "./pages/LoginPage";
 import useAuth from "./hooks/useAuth";
+import SignupPage from "./pages/SignupPage";
 
 function App() {
   const { isSignedIn } = useAuth();
@@ -20,7 +20,7 @@ function App() {
           <Routes>
             <Route path="" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/signup" element={<SignupPage />} />
 
             <Route path="/product/:id" element={<ProductPage />} />
             <Route
