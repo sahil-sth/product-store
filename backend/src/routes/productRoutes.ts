@@ -15,7 +15,7 @@ router.post(
   upload.single("image"),
   productController.createProduct,
 );
-router.put(
+router.patch(
   "/:id",
   protect,
   upload.single("image"),
