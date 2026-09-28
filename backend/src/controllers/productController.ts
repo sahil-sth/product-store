@@ -89,12 +89,11 @@ export const updateProduct = async (
     return res.status(401).json({ error: "Unauthenticated User" });
   }
   const productId = req.params.id;
-  const { title, description, imageUrl } = req.body;
 
   const existingProduct = await queries.getProductById(productId);
 
   if (!existingProduct) {
-    return res.status(404).json({ error: "No products found" });
+    return res.status(404).json({ error: "No product found" });
   }
 
   if (userId !== existingProduct.userId) {
@@ -102,12 +101,61 @@ export const updateProduct = async (
       .status(403)
       .json({ error: "Cannot modify other user's product" });
   }
+  const { title, description } = req.body ?? {};
 
-  const updatedProduct = await queries.updateProduct(productId, {
-    title,
-    description,
-    imageUrl,
-  });
+  if (title !== undefined && (typeof title !== "string" || !title.trim())) {
+    return res.status(400).json({ error: "Title cannot be empty" });
+  }
+
+  if (
+    description !== undefined &&
+    (typeof description !== "string" || !description.trim())
+  ) {
+    return res.status(400).json({
+      error: "Description cannot be empty",
+    });
+  }
+  // only upload when the user selected a replacement
+  const newImage = req.file ? await uploadImage(req.file.buffer) : null;
+  let updatedProduct;
+  try {
+    updatedProduct = await queries.updateProduct(productId, {
+      ...(title !== undefined ? { title: title.trim() } : {}),
+      ...(description !== undefined ? { description: description.trim() } : {}),
+      ...(newImage
+        ? { imageUrl: newImage.secure_url, imagePublicId: newImage.public_id }
+        : {}),
+    });
+
+    if (!updatedProduct) {
+      throw new Error("Product disappeared before it could be updated");
+    }
+  } catch (error) {
+    // Saving failed: remove the new upload, keep the old image.
+    if (newImage) {
+      try {
+        await cloudinary.uploader.destroy(newImage.public_id);
+      } catch (cleanupImageError) {
+        console.error("Failed to remove new image", cleanupImageError);
+      }
+    }
+
+    throw error;
+  }
+
+  // Saving succeeded: the old image is no longer needed.
+  if (
+    newImage &&
+    existingProduct.imagePublicId &&
+    existingProduct.imagePublicId !== newImage.public_id
+  ) {
+    try {
+      await cloudinary.uploader.destroy(existingProduct.imagePublicId);
+    } catch (cleanupError) {
+      // The product update succeeded; don't report it as a failure.
+      console.error("Failed to remove previous image", cleanupError);
+    }
+  }
 
   return res.status(200).json({ product: updatedProduct });
 };

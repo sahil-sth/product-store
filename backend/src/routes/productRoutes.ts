@@ -15,7 +15,12 @@ router.post(
   upload.single("image"),
   productController.createProduct,
 );
-router.put("/:id", protect, productController.updateProduct);
+router.put(
+  "/:id",
+  protect,
+  upload.single("image"),
+  productController.updateProduct,
+);
 router.delete("/:id", protect, productController.deleteProduct);
 
 export default router;
