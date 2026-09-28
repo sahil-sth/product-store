@@ -1,6 +1,5 @@
 import { Link, useNavigate } from "react-router";
-import { useCreateProducts } from "../hooks/useProducts";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowLeftIcon,
   FileTextIcon,
@@ -8,6 +7,9 @@ import {
   SparklesIcon,
   TypeIcon,
 } from "lucide-react";
+import { toast } from "react-toastify";
+
+import { useCreateProducts } from "../hooks/useProducts";
 
 const CreatePage = () => {
   const navigate = useNavigate();
@@ -15,12 +17,62 @@ const CreatePage = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    imageUrl: "",
   });
+  const [imageSelection, setImageSelection] = useState(null);
+
+  const image = imageSelection?.file;
+  const url = imageSelection?.url;
+
+  // remove the url when imageSelection is destroyed
+  useEffect(() => {
+    if (!imageSelection) {
+      return;
+    }
+    return () => URL.revokeObjectURL(url);
+  }, [url, imageSelection]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createProduct.mutate(formData, { onSuccess: () => navigate("/") });
+    if (createProduct.isPending) {
+      return;
+    }
+
+    if (!image) {
+      toast.error("Please select a product image");
+      return;
+    }
+    const body = new FormData();
+    body.append("title", formData.title.trim());
+    body.append("description", formData.description.trim());
+    body.append("image", image);
+
+    createProduct.mutate(body, { onSuccess: () => navigate("/") });
+  };
+
+  // this function handles the image change
+  const handleImageChange = (event) => {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      setImageSelection(null);
+      return;
+    }
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Choose a JPEG, PNG, or WebP image.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be 5 MB or smaller.");
+      event.target.value = "";
+      return;
+    }
+    // set the image selection
+    setImageSelection({ file, url: URL.createObjectURL(file) });
   };
   return (
     <div className="max-w-lg mx-auto">
@@ -49,30 +101,36 @@ const CreatePage = () => {
                 required
               />
             </label>
-            {/* Image URL Input */}
-            <label className="input input-bordered flex items-center gap-2 bg-base-200">
-              <ImageIcon className="size-4 text-base-content/50" />
+            {/* Image Input */}
+            <div className="space-y-2">
+              <label
+                htmlFor="product-image"
+                className="flex items-center gap-2"
+              >
+                <ImageIcon className="size-4 text-base-content/50" />
+                Product image
+              </label>
+
               <input
-                type="text"
-                placeholder="Image URL"
-                className="grow"
-                value={formData.imageUrl}
-                onChange={(e) =>
-                  setFormData({ ...formData, imageUrl: e.target.value })
-                }
+                id="product-image"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                className="file-input file-input-bordered w-full"
+                onChange={handleImageChange}
+                disabled={createProduct.isPending}
                 required
               />
-            </label>
-            {formData.imageUrl && (
-              <div className="rounded-box overflow-hidden">
-                <img
-                  src={formData.imageUrl}
-                  alt="Preview"
-                  className="w-full h-40 object-cover"
-                  onError={(e) => (e.target.style.display = "none")}
-                />
-              </div>
-            )}
+
+              {imageSelection?.url && (
+                <div className="rounded-box overflow-hidden">
+                  <img
+                    src={imageSelection.url}
+                    alt="Selected product preview"
+                    className="w-full h-40 object-cover"
+                  />
+                </div>
+              )}
+            </div>
             <div className="form-control">
               <div className="flex items-start gap-2 p-3 rounded-box bg-base-200 border border-base-300">
                 <FileTextIcon className="size-4 text-base-content/50 mt-1" />
