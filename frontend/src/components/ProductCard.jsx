@@ -33,9 +33,9 @@ const ProductCard = ({ product }) => {
           {product.user && (
             <div className="flex items-center gap-2">
               <div className="avatar">
-                <div className="w-6 rounded-full ring-1 ring-primary">
+                {/* <div className="w-6 rounded-full ring-1 ring-primary">
                   <img src={product.user.imageUrl} alt={product.user.name} />
-                </div>
+                </div> */}
               </div>
               <span className="text-xs text-base-content/60">
                 {product.user.name}
