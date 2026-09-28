@@ -18,6 +18,7 @@ export const products = pgTable("products", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   imageUrl: text("image_url"),
+  imagePublicId: text("image_public_id"),
   userId: uuid("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),

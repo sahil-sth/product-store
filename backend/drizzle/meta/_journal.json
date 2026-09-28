@@ -57,6 +57,13 @@
       "when": 1790218871694,
       "tag": "0007_far_sunfire",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1790561691139,
+      "tag": "0008_parallel_ironclad",
+      "breakpoints": true
     }
   ]
 }
