@@ -77,12 +77,12 @@ const CommentsSection = ({ productId, comments = [], currentUserId }) => {
         ) : (
           comments.map((eachComment) => (
             <div key={eachComment.id} className="chat chat-start">
-              <div className="w-8 rounded-full">
+              {/* <div className="w-8 rounded-full">
                 <img
                   src={eachComment.user?.imageUrl}
                   alt={eachComment.user?.name}
                 />
-              </div>
+              </div> */}
               <div className="chat-header text-xs opacity-70 mb-2">
                 {eachComment.user?.name}
                 <time className="ml-2 text-xs opacity-50">

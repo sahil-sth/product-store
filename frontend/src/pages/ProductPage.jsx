@@ -102,14 +102,14 @@ const ProductPage = () => {
               <>
                 <div className="divider my-2"></div>
                 <div className="flex items-center gap-3">
-                  <div className="avatar">
+                  {/* <div className="avatar">
                     <div className="w-12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
                       <img
                         src={product.user.imageUrl}
                         alt={product.user.name}
                       />
                     </div>
-                  </div>
+                  </div> */}
                   <div>
                     <p className="font-semibold">{product.user.name}</p>
                     <p className="text-xs text-base-content/50">Creator</p>
