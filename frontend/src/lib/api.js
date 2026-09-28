@@ -26,7 +26,7 @@ export const createProduct = async (productData) => {
 };
 
 export const updateProduct = async ({ productId, ...productData }) => {
-  const { data } = await axiosService.put(
+  const { data } = await axiosService.patch(
     `/products/${productId}`,
     productData,
   );
