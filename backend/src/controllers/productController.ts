@@ -1,5 +1,7 @@
 import type { Request, Response } from "express";
 import * as queries from "../db/queries.js";
+import { uploadImage } from "../utils/uploadImage.js";
+import cloudinary from "../cloudinary/index.js";
 
 export const getAllProducts = async (req: Request, res: Response) => {
   const products = await queries.getAllProducts();
@@ -43,20 +45,34 @@ export const createProduct = async (req: Request, res: Response) => {
   if (!userId) {
     return res.status(401).json({ error: "Unauthenticated User" });
   }
-  const { title, description, imageUrl } = req.body;
+  const { title, description } = req.body;
 
-  if (!title || !description || !imageUrl) {
+  if (!title || !description || !req.file) {
     return res
       .status(400)
-      .json({ error: "Title, description, and imageUrl are required" });
+      .json({ error: "Title, description, and an image are required" });
   }
 
-  const product = await queries.createProduct({
-    title,
-    description,
-    userId,
-    imageUrl,
-  });
+  const image = await uploadImage(req.file.buffer);
+
+  let product;
+
+  try {
+    product = await queries.createProduct({
+      title,
+      description,
+      userId: req.user.id,
+      imageUrl: image.secure_url,
+      imagePublicId: image.public_id,
+    });
+  } catch (error) {
+    try {
+      await cloudinary.uploader.destroy(image.public_id);
+    } catch (imageCleanupError) {
+      console.error("Failed to clean up uploaded image", imageCleanupError);
+    }
+    throw error;
+  }
 
   return res.status(201).json({ product });
 };
