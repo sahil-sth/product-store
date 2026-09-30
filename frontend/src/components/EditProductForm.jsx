@@ -5,15 +5,78 @@ import {
   FileTextIcon,
   SaveIcon,
 } from "lucide-react";
-import { useState } from "react";
-import { Link } from "react-router";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
-const EditProductForm = ({ product, isError, isPending, onSubmit }) => {
+import { useUpdateProduct } from "../hooks/useProducts";
+
+const EditProductForm = ({ product }) => {
+  const updateProduct = useUpdateProduct();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    title: product.title,
-    imageUrl: product.imageUrl,
-    description: product.description,
+    title: product?.title,
+    description: product?.description,
   });
+
+  const [imageSelection, setImageSelection] = useState({
+    file: null,
+    url: product?.imageUrl,
+  });
+
+  const image = imageSelection?.file;
+  const url = imageSelection?.url;
+
+  // remove the url when imageSelection is destroyed
+  useEffect(() => {
+    if (!imageSelection) {
+      return;
+    }
+    return () => URL.revokeObjectURL(url);
+  }, [url, imageSelection]);
+  // handles the file change
+  const handleImageChange = (event) => {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      setImageSelection(null);
+      return;
+    }
+    // check the selected file type
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Choose a JPEG, PNG, or WebP image.");
+      event.target.value = "";
+      return;
+    }
+    // check the size of the file
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be 5 MB or smaller.");
+      event.target.value = "";
+      return;
+    }
+    // set the image selection
+    setImageSelection({ file, url: URL.createObjectURL(file) });
+  };
+  // submit handler
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (updateProduct.isPending) {
+      return;
+    }
+
+    if (!image) {
+      toast.error("Please select a product image");
+      return;
+    }
+    const body = new FormData();
+    body.append("title", formData.title.trim());
+    body.append("description", formData.description.trim());
+    body.append("image", image);
+
+    updateProduct.mutate(body, { onSuccess: () => navigate("/") });
+  };
+
   return (
     <div className="max-w-lg mx-auto">
       <Link to="/profile" className="btn btn-ghost btn-sm gap-1 mb-4">
@@ -25,13 +88,7 @@ const EditProductForm = ({ product, isError, isPending, onSubmit }) => {
             <SaveIcon className="size-5 text-primary" />
             Edit Product
           </h1>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              onSubmit(formData);
-            }}
-            className="space-y-4 mt-4"
-          >
+          <form onSubmit={handleSubmit} className="space-y-4 mt-4">
             {/* Title */}
             <label className="input input-bordered flex items-center gap-2 bg-base-200">
               <TypeIcon className="size-4 text-base-content/50" />
@@ -46,30 +103,36 @@ const EditProductForm = ({ product, isError, isPending, onSubmit }) => {
                 required
               />
             </label>
-            {/* Image URL Input */}
-            <label className="input input-bordered flex items-center gap-2 bg-base-200">
-              <ImageIcon className="size-4 text-base-content/50" />
+            {/* Image Input */}
+            <div className="space-y-2">
+              <label
+                htmlFor="product-image"
+                className="flex items-center gap-2"
+              >
+                <ImageIcon className="size-4 text-base-content/50" />
+                Product image
+              </label>
+
               <input
-                type="text"
-                placeholder="Image URL"
-                className="grow"
-                value={formData.imageUrl}
-                onChange={(e) =>
-                  setFormData({ ...formData, imageUrl: e.target.value })
-                }
-                required
+                id="product-image"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                className="file-input file-input-bordered w-full"
+                onChange={handleImageChange}
+                disabled={updateProduct.isPending}
               />
-            </label>
-            {formData.imageUrl && (
-              <div className="rounded-box overflow-hidden">
-                <img
-                  src={formData.imageUrl}
-                  alt="Preview"
-                  className="w-full h-40 object-cover"
-                  onError={(e) => (e.target.style.display = "none")}
-                />
-              </div>
-            )}
+
+              {imageSelection?.url && (
+                <div className="rounded-box overflow-hidden">
+                  <img
+                    src={imageSelection.url}
+                    alt="Selected product preview"
+                    className="w-full h-40 object-cover"
+                  />
+                </div>
+              )}
+            </div>
+
             {/* Description */}
             <div className="form-control">
               <div className="flex items-start gap-2 p-3 rounded-box bg-base-200 border border-base-300">
@@ -85,19 +148,12 @@ const EditProductForm = ({ product, isError, isPending, onSubmit }) => {
                 />
               </div>
             </div>
-            {isError && (
-              <div role="alert" className="alert alert-error alert-sm">
-                <span>
-                  Something went wrong. Could not update. Please try again!
-                </span>
-              </div>
-            )}
             <button
               type="submit"
               className="btn btn-primary w-full"
-              disabled={isPending}
+              disabled={updateProduct.isPending}
             >
-              {isPending ? (
+              {updateProduct.isPending ? (
                 <span className="loading loading-spinner loading-xs" />
               ) : (
                 <span>Edit Product</span>

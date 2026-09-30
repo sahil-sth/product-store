@@ -1,19 +1,20 @@
-import { useNavigate, Link, useParams } from "react-router";
-import { useProduct, useUpdateProduct } from "../hooks/useProducts";
+import { Link, useParams } from "react-router";
+import { useProduct } from "../hooks/useProducts";
 
+import EditProductForm from "../components/EditProductForm";
 import useAuth from "../hooks/useAuth";
 import LoadingSpinner from "../components/LoadingSpinner";
-import EditProductForm from "../components/EditProductForm";
+
 const EditProductPage = () => {
   const { id } = useParams();
   const { userId } = useAuth();
-  const navigate = useNavigate();
 
   const { data: product, isLoading } = useProduct(id);
-  const updateProduct = useUpdateProduct();
 
+  // show loading when the product is being retrieved
   if (isLoading) return <LoadingSpinner />;
 
+  // when no product is there, then display an error
   if (!product || product.userId !== userId) {
     return (
       <div className="card bg-base-300 max-w-md mx-auto">
@@ -29,19 +30,7 @@ const EditProductPage = () => {
     );
   }
 
-  return (
-    <EditProductForm
-      product={product}
-      isPending={updateProduct.isPending}
-      isError={updateProduct.isError}
-      onSubmit={(formData) => {
-        updateProduct.mutate(
-          { productId: id, ...formData },
-          { onSuccess: () => navigate(`/product/${id}`) },
-        );
-      }}
-    />
-  );
+  return <EditProductForm product={product} />;
 };
 
 export default EditProductPage;
