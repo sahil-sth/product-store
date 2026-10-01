@@ -61,10 +61,10 @@ const CommentsSection = ({ productId, comments = [], currentUserId }) => {
       ) : (
         <div className="flex items-center justify-between bg-base-200 rounded-lg p-3">
           <span className="text-sm text-base-content/60">
-            Sign in to join the conversation
+            Log in to join the conversation
           </span>
-          <Link className="btn btn-primary btn-sm gap-1">
-            <LogInIcon className="size-4" /> Sign In
+          <Link className="btn btn-primary btn-sm gap-1" to="/login">
+            <LogInIcon className="size-4" /> Login
           </Link>
         </div>
       )}
