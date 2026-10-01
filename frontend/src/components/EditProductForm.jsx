@@ -14,6 +14,7 @@ import { useUpdateProduct } from "../hooks/useProducts";
 const EditProductForm = ({ product }) => {
   const updateProduct = useUpdateProduct();
   const navigate = useNavigate();
+  const [showImageChooser, setShowImageChooser] = useState();
   const [formData, setFormData] = useState({
     title: product?.title,
     description: product?.description,
@@ -65,10 +66,6 @@ const EditProductForm = ({ product }) => {
       return;
     }
 
-    if (!image) {
-      toast.error("Please select a product image");
-      return;
-    }
     const body = new FormData();
     body.append("title", formData.title.trim());
     body.append("description", formData.description.trim());
@@ -112,15 +109,25 @@ const EditProductForm = ({ product }) => {
                 <ImageIcon className="size-4 text-base-content/50" />
                 Product image
               </label>
-
-              <input
-                id="product-image"
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                className="file-input file-input-bordered w-full"
-                onChange={handleImageChange}
-                disabled={updateProduct.isPending}
-              />
+              {showImageChooser ? (
+                <input
+                  id="product-image"
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  className="file-input file-input-bordered w-full"
+                  onChange={handleImageChange}
+                  disabled={updateProduct.isPending}
+                />
+              ) : (
+                <button
+                  className="btn btn-sm btn-secondary"
+                  onClick={() => {
+                    setShowImageChooser(true);
+                  }}
+                >
+                  Change product image
+                </button>
+              )}
 
               {imageSelection?.url && (
                 <div className="rounded-box overflow-hidden">
