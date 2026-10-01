@@ -69,9 +69,14 @@ const EditProductForm = ({ product }) => {
     const body = new FormData();
     body.append("title", formData.title.trim());
     body.append("description", formData.description.trim());
-    body.append("image", image);
+    if (image) {
+      body.append("image", image);
+    }
 
-    updateProduct.mutate(body, { onSuccess: () => navigate("/") });
+    updateProduct.mutate(
+      { productId: product.id, productData: body },
+      { onSuccess: () => navigate("/") },
+    );
   };
 
   return (
@@ -120,6 +125,7 @@ const EditProductForm = ({ product }) => {
                 />
               ) : (
                 <button
+                  type="button"
                   className="btn btn-sm btn-secondary"
                   onClick={() => {
                     setShowImageChooser(true);

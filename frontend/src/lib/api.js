@@ -25,7 +25,7 @@ export const createProduct = async (productData) => {
   return data;
 };
 
-export const updateProduct = async ({ productId, ...productData }) => {
+export const updateProduct = async ({ productId, productData }) => {
   const { data } = await axiosService.patch(
     `/products/${productId}`,
     productData,
